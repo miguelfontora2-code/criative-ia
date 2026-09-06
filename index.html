@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criative.IA — Gerador de Criativos para Infoprodutores</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                <span class="logo-text">Criative<span class="logo-dot">.IA</span></span>
+            </div>
+            <div class="header-right">
+                <div class="credits-badge" id="creditsBadge">
+                    <span class="credits-icon">🪙</span>
+                    <span class="credits-count" id="creditsCount">3</span>
+                    <span class="credits-label">créditos</span>
+                </div>
+                <button class="btn-plan" id="btnPlan" onclick="showPlanModal()">
+                    ✨ Planos
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" id="heroSection">
+        <div class="hero-content">
+            <div class="hero-badge">🚀 Feito para infoprodutores</div>
+            <h1 class="hero-title">
+                Gere criativos de anúncio<br>
+                <span class="gradient-text">que vendem em minutos</span>
+            </h1>
+            <p class="hero-subtitle">
+                Imagens profissionais + copies prontas para Facebook, Instagram e TikTok.<br>
+                Sem precisar de designer ou copywriter.
+            </p>
+            <button class="btn-primary btn-lg" onclick="scrollToForm()">
+                Começar Agora — É Grátis 🎯
+            </button>
+            <p class="hero-hint">3 gerações grátis para testar</p>
+        </div>
+        <div class="hero-visual">
+            <div class="mock-card mock-1">📱</div>
+            <div class="mock-card mock-2">🎯</div>
+            <div class="mock-card mock-3">💰</div>
+        </div>
+    </section>
+
+    <!-- FORM SECTION -->
+    <section class="form-section" id="formSection">
+        <div class="container">
+            <div class="section-header">
+                <h2>📝 Conte sobre seu produto</h2>
+                <p>Preencha os campos e a IA gera seus criativos automaticamente</p>
+            </div>
+
+            <form id="creativeForm" onsubmit="handleSubmit(event)">
+                <div class="form-grid">
+                    <div class="form-group full">
+                        <label for="productName">Nome do Produto</label>
+                        <input type="text" id="productName" placeholder="Ex: Método de Emagrecimento Definitivo" required>
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="productDesc">O que seu produto resolve?</label>
+                        <textarea id="productDesc" rows="3" placeholder="Ex: Programa completo de 30 dias que ajuda mulheres a perderem até 8kg sem dietas restritivas, com exercícios simples de 15 minutos em casa." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="targetAudience">Público-alvo</label>
+                        <input type="text" id="targetAudience" placeholder="Ex: Mulheres 25-40 interessadas em emagrecimento" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mainBenefit">Principal benefício/resultado</label>
+                        <input type="text" id="mainBenefit" placeholder="Ex: Perder até 8kg em 30 dias sem academia" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="price">Preço do produto</label>
+                        <div class="input-with-prefix">
+                            <span class="input-prefix">R$</span>
+                            <input type="text" id="price" placeholder="97,00" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tone">Tom de voz</label>
+                        <select id="tone" required>
+                            <option value="">Selecione...</option>
+                            <option value="urgencia">🔥 Urgência</option>
+                            <option value="autoridade">👑 Autoridade</option>
+                            <option value="emocional">❤️ Emocional</option>
+                            <option value="direto">⚡ Direto e Objetivo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary btn-lg" id="btnGenerate">
+                        <span class="btn-text">✨ Gerar Meus Criativos</span>
+                        <span class="btn-loading" style="display:none;">
+                            <span class="spinner"></span> Gerando...
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- LOADING -->
+    <section class="loading-section" id="loadingSection" style="display:none;">
+        <div class="container">
+            <div class="loading-box">
+                <div class="loading-animation">
+                    <div class="loading-ring"></div>
+                    <span class="loading-icon">🎨</span>
+                </div>
+                <h3>Gerando seus criativos...</h3>
+                <p>Isso leva menos de 30 segundos</p>
+                <div class="loading-bar">
+                    <div class="loading-bar-fill" id="loadingBar"></div>
+                </div>
+                <div class="loading-steps" id="loadingSteps">
+                    <div class="loading-step active">📝 Analisando produto...</div>
+                    <div class="loading-step">🎨 Criando imagens...</div>
+                    <div class="loading-step">✍️ Escrevendo copies...</div>
+                    <div class="loading-step">✅ Finalizando...</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RESULTS SECTION -->
+    <section class="results-section" id="resultsSection" style="display:none;">
+        <div class="container">
+            <div class="section-header">
+                <h2>🎨 Seus Criativos Prontos!</h2>
+                <p>Clique em um criativo para ver os detalhes</p>
+            </div>
+
+            <div class="results-tabs">
+                <button class="tab active" onclick="switchTab('all', this)">Todos</button>
+                <button class="tab" onclick="switchTab('square', this)">📐 Quadrado</button>
+                <button class="tab" onclick="switchTab('vertical', this)">📱 Vertical</button>
+                <button class="tab" onclick="switchTab('copies', this)">✍️ Copies</button>
+            </div>
+
+            <div class="results-grid" id="resultsGrid">
+                <!-- Cards gerados via JS -->
+            </div>
+
+            <div class="results-actions">
+                <button class="btn-secondary btn-lg" onclick="downloadAll()">
+                    📦 Baixar Tudo (Imagens + Textos)
+                </button>
+                <button class="btn-outline" onclick="resetForm()">
+                    🔄 Criar Novos Criativos
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- DETAIL MODAL -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <div class="modal-body" id="modalBody">
+                <!-- Preenchido via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- PLAN MODAL -->
+    <div class="modal-overlay" id="planModal">
+        <div class="modal-content modal-plan">
+            <button class="modal-close" onclick="closePlanModal()">✕</button>
+            <div class="plan-header">
+                <h2>Escolha seu plano</h2>
+                <p>Comece grátis, upgrade quando quiser</p>
+            </div>
+            <div class="plans-grid">
+                <div class="plan-card">
+                    <div class="plan-name">Grátis</div>
+                    <div class="plan-price">R$0</div>
+                    <div class="plan-period">para sempre</div>
+                    <ul class="plan-features">
+                        <li>✅ 3 gerações por mês</li>
+                        <li>✅ Formato quadrado + vertical</li>
+                        <li>✅ Copies para Facebook/IG</li>
+                        <li class="disabled">❌ Downloads em pacote</li>
+                        <li class="disabled">❌ Regeneração ilimitada</li>
+                    </ul>
+                    <button class="btn-outline btn-plan-select" disabled>Plano Atual</button>
+                </div>
+                <div class="plan-card plan-featured">
+                    <div class="plan-badge">🔥 Mais Popular</div>
+                    <div class="plan-name">Pro</div>
+                    <div class="plan-price">R$47</div>
+                    <div class="plan-period">/mês</div>
+                    <ul class="plan-features">
+                        <li>✅ 50 gerações por mês</li>
+                        <li>✅ Todos os formatos</li>
+                        <li>✅ Copies completas</li>
+                        <li>✅ Downloads em pacote</li>
+                        <li>✅ Regeneração ilimitada</li>
+                    </ul>
+                    <button class="btn-primary btn-plan-select" onclick="selectPlan('pro')">Assinar Pro</button>
+                </div>
+                <div class="plan-card">
+                    <div class="plan-name">Business</div>
+                    <div class="plan-price">R$97</div>
+                    <div class="plan-period">/mês</div>
+                    <ul class="plan-features">
+                        <li>✅ Gerações ilimitadas</li>
+                        <li>✅ Todos os formatos</li>
+                        <li>✅ Copies completas</li>
+                        <li>✅ Downloads em pacote</li>
+                        <li>✅ Suporte prioritário</li>
+                        <li>✅ API de integração</li>
+                    </ul>
+                    <button class="btn-primary btn-plan-select" onclick="selectPlan('business')">Assinar Business</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-logo">⚡ Criative<span class="logo-dot">.IA</span></div>
+                <p>Gerador de criativos para infoprodutores</p>
+                <p class="footer-copy">© 2025 Criative.IA — Todos os direitos reservados</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
