@@ -1,4 +1,9 @@
 // ===== Criative.IA - App Logic =====
+const supabase = window.supabase.createClient(
+    'https://rlsqstfjmezeezlerqdo.supabase.co',
+    'sb_publishable_c221_1pfJw9JjGu-4u-6xA_YKPMWs1x'
+);
+let userEmail = null;
 
 // Estado global
 let credits = 3;
@@ -444,6 +449,7 @@ function startLoadingAnimation(product) {
         generatedCreatives = generateCreatives(product);
         credits--;
         updateCreditsUI();
+        saveState();
 
         document.getElementById('loadingSection').style.display = 'none';
         document.getElementById('resultsSection').style.display = 'block';
@@ -581,6 +587,7 @@ function selectPlan(plan) {
         showToast('✅ Plano Business ativado! Créditos ilimitados.');
     }
     updateCreditsUI();
+    saveState();
     closePlanModal();
 }
 
@@ -756,28 +763,39 @@ document.getElementById('planModal').addEventListener('click', (e) => {
     if (e.target === e.currentTarget) closePlanModal();
 });
 
-// Verificar localStorage para créditos salvos
-function loadState() {
-    const saved = localStorage.getItem('criativeia_state');
-    if (saved) {
-        try {
-            const state = JSON.parse(saved);
-            credits = state.credits ?? 3;
-            currentPlan = state.currentPlan ?? 'free';
-        } catch (e) {}
+// ===== LOGIN E ESTADO VIA SUPABASE =====
+
+async function loadState() {
+    userEmail = localStorage.getItem('criativeia_email');
+    if (!userEmail) {
+        userEmail = prompt('Digite seu e-mail para começar:');
+        if (userEmail) localStorage.setItem('criativeia_email', userEmail);
+    }
+    if (!userEmail) { updateCreditsUI(); return; }
+
+    let { data } = await supabase.from('usuarios').select('*').eq('email', userEmail).single();
+
+    if (!data) {
+        const { data: novo } = await supabase.from('usuarios')
+            .insert([{ email: userEmail, plano: 'gratis', creditos: 3 }])
+            .select().single();
+        data = novo;
+    }
+
+    if (data) {
+        credits = data.creditos;
+        currentPlan = data.plano === 'gratis' ? 'free' : data.plano;
     }
     updateCreditsUI();
 }
 
-function saveState() {
-    localStorage.setItem('criativeia_state', JSON.stringify({
-        credits,
-        currentPlan
-    }));
+async function saveState() {
+    if (!userEmail) return;
+    await supabase.from('usuarios').update({
+        creditos: credits,
+        plano: currentPlan === 'free' ? 'gratis' : currentPlan
+    }).eq('email', userEmail);
 }
-
-// Salvar estado periodicamente
-setInterval(saveState, 5000);
 
 // Init
 loadState();
