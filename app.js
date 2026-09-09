@@ -407,7 +407,6 @@ function scrollToForm() {
 
 function handleSubmit(e) {
     e.preventDefault();
-    alert('Botão clicado! Formulário sendo processado...');
 
     if (credits <= 0) {
         showToast('❌ Sem créditos! Faça upgrade para continuar.', 'error');
