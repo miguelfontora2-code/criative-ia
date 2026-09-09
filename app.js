@@ -1,8 +1,18 @@
 // ===== Criative.IA - App Logic =====
-const supabase = window.supabase.createClient(
-    'https://rlsqstfjmezeezlerqdo.supabase.co',
-    'sb_publishable_c221_1pfJw9JjGu-4u-6xA_YKPMWs1x'
-);
+window.onerror = function(msg, url, line, col, error) {
+    alert('ERRO DETECTADO:\n' + msg + '\nLinha: ' + line);
+    return false;
+};
+
+let supabase;
+try {
+    supabase = window.supabase.createClient(
+        'https://rlsqstfjmezeezlerqdo.supabase.co',
+        'sb_publishable_c221_1pfJw9JjGu-4u-6xA_YKPMWs1x'
+    );
+} catch (err) {
+    alert('ERRO ao criar cliente Supabase: ' + err.message);
+}
 let userEmail = null;
 
 // Estado global
@@ -397,6 +407,7 @@ function scrollToForm() {
 
 function handleSubmit(e) {
     e.preventDefault();
+    alert('Botão clicado! Formulário sendo processado...');
 
     if (credits <= 0) {
         showToast('❌ Sem créditos! Faça upgrade para continuar.', 'error');
